@@ -3,6 +3,9 @@ import numpy as np
 import torchvision.transforms as transforms
 import torchvision.datasets as datasets
 from sklearn.decomposition import PCA
+from sklearn.svm import SVC
+from sklearn.metrics import accuracy_score
+import time
 
 def extract_classes(dataset, classes):
     X = []
@@ -34,3 +37,28 @@ pca_temp.fit(X_train)
 explained_variance = np.cumsum(pca_temp.explained_variance_ratio_)
 n_components = np.argmax(explained_variance >= 0.90) + 1
 print("Αριθμός συνιστωσών για 90% πληροφορίας:", n_components)
+
+pca = PCA(n_components=n_components)
+pca.fit(X_train)
+X_train_pca = pca.transform(X_train)
+X_test_pca = pca.transform(X_test)
+print("Train PCA shape:", X_train_pca.shape)
+print("Test PCA shape:", X_test_pca.shape)
+
+svm_linear = SVC(kernel='linear')
+
+start = time.perf_counter()
+svm_linear.fit(X_train_pca, y_train)
+end = time.perf_counter()
+train_time = end-start
+
+y_train_pred = svm_linear.predict(X_train_pca)
+y_test_pred = svm_linear.predict(X_test_pca)
+
+train_acc = accuracy_score(y_train, y_train_pred)
+test_acc = accuracy_score(y_test, y_test_pred)
+
+print("Linear SVM")
+print(f"Training Accuracy: {train_acc:.4f}")
+print(f"Test Accuracy: {test_acc:.4f}")
+print(f"Training Time: {train_time:.2f} sec")
