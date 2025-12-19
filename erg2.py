@@ -62,3 +62,22 @@ print("Linear SVM")
 print(f"Training Accuracy: {train_acc:.4f}")
 print(f"Test Accuracy: {test_acc:.4f}")
 print(f"Training Time: {train_time:.2f} sec")
+
+
+
+svm_rdf = SVC(kernel='rbf')
+start = time.perf_counter()
+svm_rdf.fit(X_train_pca, y_train)
+end = time.perf_counter()
+train_time = end-start
+
+y_train_pred = svm_rdf.predict(X_train_pca)
+y_test_pred = svm_rdf.predict(X_test_pca)
+
+train_acc = accuracy_score(y_train, y_train_pred)
+test_acc = accuracy_score(y_test, y_test_pred)
+
+print("RΒF SVM")
+print(f"Training Accuracy: {train_acc:.4f}")
+print(f"Test Accuracy: {test_acc:.4f}")
+print(f"Training Time: {train_time:.2f} sec")
