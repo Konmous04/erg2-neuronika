@@ -1,4 +1,5 @@
 import torch
+from sklearn.preprocessing import StandardScaler
 import numpy as np
 import torchvision.transforms as transforms
 import torchvision.datasets as datasets
@@ -44,6 +45,12 @@ X_train_pca = pca.transform(X_train)
 X_test_pca = pca.transform(X_test)
 print("Train PCA shape:", X_train_pca.shape)
 print("Test PCA shape:", X_test_pca.shape)
+scaler = StandardScaler()
+X_train_pca = scaler.fit_transform(X_train_pca)
+X_test_pca = scaler.fit_transform(X_test_pca)
+print(X_train_pca.mean(axis=0)[:5])
+print(X_train_pca.std(axis=0)[:5])
+
 
 svm_linear = SVC(kernel='linear')
 
@@ -81,3 +88,29 @@ print("RΒF SVM")
 print(f"Training Accuracy: {train_acc:.4f}")
 print(f"Test Accuracy: {test_acc:.4f}")
 print(f"Training Time: {train_time:.2f} sec")
+
+
+C_values = [0.1, 1, 10]
+gamma_values = [0.01, 0.1, 1]
+results = []
+for C in C_values:
+    for gamma in gamma_values:
+        svm = SVC(kernel='rbf', C=C, gamma=gamma)
+        
+        start = time.perf_counter()
+        svm.fit(X_train_pca, y_train)
+        end = time.perf_counter()
+        train_time = end-start
+
+        y_train_pred = svm.predict(X_train_pca)
+        y_test_pred = svm.predict(X_test_pca)
+
+        train_acc = accuracy_score(y_train, y_train_pred)
+        test_acc = accuracy_score(y_test, y_test_pred)
+
+        results.append((C, gamma, train_acc, test_acc, train_time))
+        
+        print(f"C={C}, gamma={gamma}")
+        print(f"Training Accuracy: {train_acc:.4f}")
+        print(f"Test Accuracy: {test_acc:.4f}")
+        print(f"Training Time: {train_time:.2f} sec")
