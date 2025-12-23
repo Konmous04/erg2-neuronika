@@ -123,6 +123,7 @@ if __name__ == "__main__":
 
     num_epochs = 20
 
+    s = time.perf_counter()
     for epoch in range(num_epochs):
         
         start = time.perf_counter()
@@ -136,3 +137,6 @@ if __name__ == "__main__":
               f"Test Loss: {test_loss:.4f} | Test Accuracy: {test_acc:.4f} | "
               f"Time: {total_time:.1f}sec"
              )
+    e = time.perf_counter()
+    tt = e-s
+    print(f"Total time for {num_epochs} epochs: {tt:.1f}sec")
