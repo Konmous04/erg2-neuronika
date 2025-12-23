@@ -23,7 +23,6 @@ def filter_cat_dog(X, y):
     y = np.where(y==3,0,1)
     return X, y
 
-
 transform = transforms.Compose([
     transforms.ToTensor(),
     transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
@@ -55,8 +54,6 @@ y_pred_knn1 = knn1.predict(X_test)
 acc_knn1 = accuracy_score(y_test, y_pred_knn1)*100
 end = time.perf_counter()
 knn1_time = end-start
-
-
 
 start = time.perf_counter()
 knn3 = KNeighborsClassifier(n_neighbors=3)

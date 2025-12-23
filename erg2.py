@@ -79,9 +79,8 @@ scaler = StandardScaler()
 X_train_pca = scaler.fit_transform(X_train_pca)
 X_test_pca = scaler.transform(X_test_pca)
 
-
+# 
 svm_linear = SVC(kernel='linear')
-
 start = time.perf_counter()
 svm_linear.fit(X_train_pca, y_train)
 end = time.perf_counter()
